@@ -18,7 +18,6 @@ public class MainClient {
 		ReadDataMessage message2 = new ReadDataMessage("/my/path/to/a/file");
 
 		try {
-//			c.serve("This is a test message");
 			c.serveMessage(message2);
 			c.serveMessage(message);
 			c.shutdownConnection();

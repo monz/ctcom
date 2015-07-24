@@ -30,9 +30,6 @@ public class CtcomClient {
 		
 		String echo = reader.readLine();
 		System.out.println(echo);
-		
-		writer.close();
-		reader.close();
 	}
 	
 	public void serveMessage(CtcomMessage message) throws IOException {
