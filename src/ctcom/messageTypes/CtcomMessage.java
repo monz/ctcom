@@ -1,6 +1,7 @@
 package ctcom.messageTypes;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ public abstract class CtcomMessage {
 		return type;
 	}
 	
-	/*
+	/**
 	 * Returns a string representation of the message's payload.
 	 * Also includes message begin and end symbols.
 	 */
@@ -34,7 +35,8 @@ public abstract class CtcomMessage {
 			
 			// add values comma separated
 			payloadAsString.append('"');
-			payloadAsString.append(String.join(",", payload.get(identifier)));
+			// payloadAsString.append(String.join(",", payload.get(identifier))); // java 1.8 only
+			payloadAsString.append(join(",", payload.get(identifier)));
 			payloadAsString.append('"');
 			
 			// separate lines
@@ -48,7 +50,26 @@ public abstract class CtcomMessage {
 		return payloadAsString.toString();
 	}
 	
-	/*
+	/**
+	 * Joins Strings in the collection separated by delimiter
+	 */
+	private String join(CharSequence delemiter, Collection<String> collection) {
+		StringBuilder joinedString = new StringBuilder();
+		
+		int collectionSize = collection.size();
+		int count = 0;
+		for (String s : collection) {
+			count++;
+			joinedString.append(s);
+			
+			if (count != collectionSize) {
+				joinedString.append(delemiter);
+			}
+		}
+		return joinedString.toString();
+	}
+	
+	/**
 	 * Format enum identifier, to fit protocol case sensitive identifier representation
 	 */
 	protected String formatIdentifier(MessageIdentifier identifier) {
@@ -68,21 +89,21 @@ public abstract class CtcomMessage {
 		return formattedIdentifier;
 	}
 	
-	/*
+	/**
 	 * Set part of a message's payload
 	 */
 	protected void appendPayload(MessageIdentifier id, List<String> values) {
 		payload.put(id, values);
 	}
 
-	/*
+	/**
 	 * Set part of a message's payload
 	 */
 	protected void appendPayload(MessageIdentifier id, String value) {
 		payload.put(id, Arrays.asList(value));
 	}
 	
-	/*
+	/**
 	 * Fills the payload with message specific data
 	 */
 	public abstract void preparePayload();
