@@ -1,7 +1,10 @@
-package ctcom.messageTypes;
+package ctcom.messageImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ctcom.messageTypes.MessageIdentifier;
+import ctcom.messageTypes.MessageType;
 
 public class ConnectMessage extends CtcomMessage {
 	private static String PROTOCOL_VERSION = "2014.01";

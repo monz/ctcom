@@ -2,8 +2,8 @@ package ctcom;
 
 import java.io.IOException;
 
-import ctcom.messageTypes.ConnectMessage;
-import ctcom.messageTypes.ReadDataMessage;
+import ctcom.messageImpl.ConnectMessage;
+import ctcom.messageImpl.ReadDataMessage;
 
 public class MainClient {
 	public static void main(String[] args) {

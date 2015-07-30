@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-import ctcom.messageTypes.CtcomMessage;
+import ctcom.messageImpl.CtcomMessage;
 
 public class CtcomClient {
 	private Socket server;

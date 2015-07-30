@@ -1,10 +1,13 @@
-package ctcom.messageTypes;
+package ctcom.messageImpl;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import ctcom.messageTypes.MessageIdentifier;
+import ctcom.messageTypes.MessageType;
 
 public abstract class CtcomMessage {
 	protected MessageType type;
@@ -70,7 +73,8 @@ public abstract class CtcomMessage {
 	}
 	
 	/**
-	 * Format enum identifier, to fit protocol case sensitive identifier representation
+	 * Format String representation of enum identifier,
+	 * to fit ctcom protocol case sensitive identifier representation
 	 */
 	protected String formatIdentifier(MessageIdentifier identifier) {
 		String formattedIdentifier;

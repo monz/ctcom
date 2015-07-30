@@ -1,4 +1,7 @@
-package ctcom.messageTypes;
+package ctcom.messageImpl;
+
+import ctcom.messageTypes.MessageIdentifier;
+import ctcom.messageTypes.MessageType;
 
 public class QuitMessage extends CtcomMessage {
 	private String message;
