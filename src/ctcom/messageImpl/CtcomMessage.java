@@ -1,11 +1,14 @@
 package ctcom.messageImpl;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ctcom.exceptions.ReadMessageException;
 import ctcom.messageTypes.MessageIdentifier;
 import ctcom.messageTypes.MessageType;
 
@@ -111,4 +114,11 @@ public abstract class CtcomMessage {
 	 * Fills the payload with message specific data
 	 */
 	protected abstract void preparePayload();
+	
+	/**
+	 * Read data from client input stream, fill message attributes
+	 * @throws IOException 
+	 * @throws ReadMessageException 
+	 */
+	public abstract void readMessage(Socket client) throws IOException, ReadMessageException;
 }

@@ -1,5 +1,8 @@
 package ctcom.messageImpl;
 
+import java.io.IOException;
+import java.net.Socket;
+
 import ctcom.messageTypes.MessageIdentifier;
 import ctcom.messageTypes.MessageType;
 
@@ -23,5 +26,11 @@ public class QuitMessage extends CtcomMessage {
 	protected void preparePayload() {
 		appendPayload(Identifier.TYPE, formatIdentifier(type));
 		appendPayload(Identifier.MESSAGE, message);
+	}
+
+	@Override
+	public void readMessage(Socket client) throws IOException {
+		// TODO Auto-generated method stub
+		
 	}
 }
