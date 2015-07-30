@@ -36,7 +36,7 @@ public class ConnectMessage extends CtcomMessage {
 	}
 	
 	@Override
-	public  void preparePayload() {
+	protected void preparePayload() {
 		appendPayload(Identifier.TYPE, formatIdentifier(type));
 		appendPayload(Identifier.PROTOCOL, PROTOCOL_VERSION);
 		appendPayload(Identifier.TESTBENCH_WRITE, testbenchWrite);

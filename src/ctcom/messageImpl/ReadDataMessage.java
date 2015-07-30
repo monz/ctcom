@@ -25,7 +25,7 @@ public class ReadDataMessage extends CtcomMessage {
 	}
 
 	@Override
-	public void preparePayload() {
+	protected void preparePayload() {
 		appendPayload(Identifier.TYPE, formatIdentifier(type));
 		appendPayload(Identifier.TRANSFER, TRANSFER);
 		appendPayload(Identifier.LOCATION, location);

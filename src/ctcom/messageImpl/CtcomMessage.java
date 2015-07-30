@@ -110,5 +110,5 @@ public abstract class CtcomMessage {
 	/**
 	 * Fills the payload with message specific data
 	 */
-	public abstract void preparePayload();
+	protected abstract void preparePayload();
 }
