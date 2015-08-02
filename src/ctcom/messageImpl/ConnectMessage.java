@@ -56,39 +56,75 @@ public class ConnectMessage extends CtcomMessage {
 	public void readMessage(Socket client) throws IOException, ReadMessageException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
 		
+		boolean messageEnd = false;
 		String line = reader.readLine();
-		while ( line != null ) {
+		while ( line != null && ! messageEnd ) {
 			
-			if ( line.contains("=") ) { // process line
+			// process line
+			if ( line.contains("=") ) {
 				processLine(line);
-			} else if ( line.startsWith("<") || line.startsWith(">")) { // skip beginning, ending
-				continue;
-			} else if ( line.isEmpty() || line.trim().isEmpty() ) { // skip empty lines, or lines containing whitespace only
+				line = reader.readLine();
 				continue;
 			}
-			// next line
-			line = reader.readLine();
+			// skip beginning
+			else if ( line.startsWith("<") ) {
+				line = reader.readLine();
+				continue;
+			}
+			// skip empty lines, or lines containing whitespace only
+			else if ( line.isEmpty() || line.trim().isEmpty() ) {
+				line = reader.readLine();
+				continue;
+			}
+			// end of message
+			else if ( line.startsWith(">") ) {
+				messageEnd = true;
+				continue;
+			}
+
+			throw new ReadMessageException("Malformed line in message: '" + line + "'");
 		}
 	}
 	
 	private void processLine(String line) throws ReadMessageException {
 		String[] keyValue = line.split("=");
 
+		// trim "-sign of values
+		keyValue[1] = keyValue[1].replaceAll("\"", "");
+
 		// check if message type is correct
-		if ( keyValue[0].equals(formatIdentifier(Identifier.TYPE)) && ! keyValue[1].equals(MessageType.CONNECT.toString()) ) {
-			throw new ReadMessageException("Expected ctcom connect message, received type: " + keyValue[1]);
+		if ( keyValue[0].equals(formatIdentifier(Identifier.TYPE)) ) {
+			if ( keyValue[1].equals(MessageType.CONNECT.toString()) ) { 
+				return; // has correct type
+			} else {
+				throw new ReadMessageException("Expected ctcom connect message, received type: '" + keyValue[1] + "'");
+			}
 		}
 		// check if protocol version matches
-		else if ( keyValue[0].equals(formatIdentifier(Identifier.PROTOCOL)) && ! keyValue[1].equals(PROTOCOL_VERSION) ) {
-			throw new ReadMessageException("Protocol version " + PROTOCOL_VERSION + " expected, but was " + keyValue[1]);
+		else if ( keyValue[0].equals(formatIdentifier(Identifier.PROTOCOL)) ) {
+			if ( keyValue[1].equals(PROTOCOL_VERSION) ) { 
+				return; // has correct protocol version
+			} else {
+				throw new ReadMessageException("Protocol version " + PROTOCOL_VERSION + " expected, but was '" + keyValue[1] + "'");
+			}
 		}
 		// read test bench write data
 		else if ( keyValue[0].equals(formatIdentifier((Identifier.TESTBENCH_WRITE))) ){
-			// TODO split data, fill message object attributes
+			String[] values = keyValue[1].split(",");
+			for (String v : values) {
+				testbenchWrite.add(v.trim());
+			}
 		}
 		// read test bench read data
 		else if ( keyValue[0].equals(formatIdentifier(Identifier.TESTBENCH_READ)) ) {
-			// TODO split data, fill message object attributes
+			String[] values = keyValue[1].split(",");
+			for (String v : values) {
+				testbenchRead.add(v.trim());
+			}
+		}
+		// false key, throw exception
+		else {
+			throw new ReadMessageException("Unknown key in connect message: '" + keyValue[0] + "'");
 		}
 	}
 }
