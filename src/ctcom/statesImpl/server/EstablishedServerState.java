@@ -75,7 +75,7 @@ public class EstablishedServerState implements ServerState {
 	}
 
 	@Override
-	public CtcomMessage getConnectRequest(CtcomServer server, Socket client) throws OperationNotSupportedException {
+	public CtcomMessage getConnectRequest(CtcomServer server) throws OperationNotSupportedException {
 		throw new OperationNotSupportedException("Cannot serve client, connection already established.");
 	}
 

@@ -44,7 +44,8 @@ public class ListenServerState implements ServerState {
 	}
 
 	@Override
-	public CtcomMessage getConnectRequest(CtcomServer server, Socket client) throws OperationNotSupportedException {
+	public CtcomMessage getConnectRequest(CtcomServer server) throws OperationNotSupportedException {
+		Socket client = server.getClientSocket();
 		ConnectMessage message = new ConnectMessage();
 		// read connect message from client
 		try {

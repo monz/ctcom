@@ -42,8 +42,8 @@ public class CtcomServer {
 		return state;
 	}
 
-	public CtcomMessage getConnectRequest(Socket client) throws OperationNotSupportedException {
-		return state.getConnectRequest(this, client);
+	public CtcomMessage getConnectRequest() throws OperationNotSupportedException {
+		return state.getConnectRequest(this);
 	}
 	
 	public void sendConnectAcknowledge(CtcomMessage message) throws OperationNotSupportedException {
