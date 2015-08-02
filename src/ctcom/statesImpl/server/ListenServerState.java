@@ -30,8 +30,7 @@ public class ListenServerState implements ServerState {
 
 	@Override
 	public void sendConnectionAck(CtcomServer server, CtcomMessage message) throws OperationNotSupportedException {
-		// TODO Auto-generated method stub
-
+		throw new OperationNotSupportedException("Cannot send ctcom connection acknowledge, no connection request received yet");
 	}
 
 	@Override
