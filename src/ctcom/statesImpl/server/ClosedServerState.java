@@ -18,6 +18,7 @@ public class ClosedServerState implements ServerState {
 		Socket client = null;
 		try {
 			client = server.getServerSocket().accept();
+			server.setClientSocket(client);
 		} catch (IOException e) {
 			e.printStackTrace();
 			server.changeState(new ClosedServerState());
