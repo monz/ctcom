@@ -17,7 +17,7 @@ import ctcom.states.ServerState;
 public class EstablishedServerState implements ServerState {
 
 	@Override
-	public Socket open(CtcomServer server, int port) throws OperationNotSupportedException {
+	public Socket accept(CtcomServer server) throws OperationNotSupportedException {
 		throw new OperationNotSupportedException("Cannot open connection, already open and established.");		
 	}
 
@@ -75,7 +75,7 @@ public class EstablishedServerState implements ServerState {
 	}
 
 	@Override
-	public CtcomMessage receiveConnectRequest(CtcomServer server, Socket client) throws OperationNotSupportedException {
+	public CtcomMessage getConnectRequest(CtcomServer server, Socket client) throws OperationNotSupportedException {
 		throw new OperationNotSupportedException("Cannot serve client, connection already established.");
 	}
 

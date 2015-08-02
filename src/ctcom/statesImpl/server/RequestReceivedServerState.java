@@ -14,7 +14,7 @@ import ctcom.states.ServerState;
 public class RequestReceivedServerState implements ServerState {
 
 	@Override
-	public Socket open(CtcomServer server, int port) throws OperationNotSupportedException {
+	public Socket accept(CtcomServer server) throws OperationNotSupportedException {
 		throw new OperationNotSupportedException("Cannot open connection, already open.");
 	}
 
@@ -39,7 +39,7 @@ public class RequestReceivedServerState implements ServerState {
 	}
 
 	@Override
-	public CtcomMessage receiveConnectRequest(CtcomServer server, Socket client) throws OperationNotSupportedException {
+	public CtcomMessage getConnectRequest(CtcomServer server, Socket client) throws OperationNotSupportedException {
 		throw new OperationNotSupportedException("Cannot receive connection request, already received. Only one concurrent connection allowed.");
 	}
 

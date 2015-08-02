@@ -1,7 +1,6 @@
 package ctcom.statesImpl.server;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 import javax.naming.OperationNotSupportedException;
@@ -13,14 +12,11 @@ import ctcom.states.ServerState;
 public class ClosedServerState implements ServerState {
 
 	@Override
-	public Socket open(CtcomServer server, int port) throws OperationNotSupportedException {		
+	public Socket accept(CtcomServer server) throws OperationNotSupportedException {
 		server.changeState(new ListenServerState());
 		
 		Socket client = null;
 		try {
-			// open server socket
-			server.setServerSocket(new ServerSocket(port));
-			
 			client = server.getServerSocket().accept();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -50,7 +46,7 @@ public class ClosedServerState implements ServerState {
 	}
 
 	@Override
-	public CtcomMessage receiveConnectRequest(CtcomServer server, Socket client) throws OperationNotSupportedException {
+	public CtcomMessage getConnectRequest(CtcomServer server, Socket client) throws OperationNotSupportedException {
 		throw new OperationNotSupportedException("Failed to serve client, connection is closed.");
 	}
 }

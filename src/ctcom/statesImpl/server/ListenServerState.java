@@ -14,7 +14,7 @@ import ctcom.states.ServerState;
 public class ListenServerState implements ServerState {
 
 	@Override
-	public Socket open(CtcomServer server, int port) throws OperationNotSupportedException {
+	public Socket accept(CtcomServer server) throws OperationNotSupportedException {
 		throw new OperationNotSupportedException("Could not open connection, already open.");
 	}
 
@@ -45,7 +45,7 @@ public class ListenServerState implements ServerState {
 	}
 
 	@Override
-	public CtcomMessage receiveConnectRequest(CtcomServer server, Socket client) throws OperationNotSupportedException {
+	public CtcomMessage getConnectRequest(CtcomServer server, Socket client) throws OperationNotSupportedException {
 		ConnectMessage message = new ConnectMessage();
 		// read connect message from client
 		try {

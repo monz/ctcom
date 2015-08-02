@@ -1,5 +1,6 @@
 package ctcom;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -14,7 +15,9 @@ public class CtcomServer {
 	private ServerSocket serverSocket;
 	private Socket client;
 	
-	public CtcomServer(){
+	public CtcomServer(int port) throws IOException{
+		// open server socket
+		serverSocket = new ServerSocket(port);
 		// starting in closed state
 		state = new ClosedServerState();
 	}
@@ -39,16 +42,16 @@ public class CtcomServer {
 		return state;
 	}
 
-	public CtcomMessage receiveConnectRequest(Socket client) throws OperationNotSupportedException {
-		return state.receiveConnectRequest(this, client);
+	public CtcomMessage getConnectRequest(Socket client) throws OperationNotSupportedException {
+		return state.getConnectRequest(this, client);
 	}
 	
 	public void sendConnectAcknowledge(CtcomMessage message) throws OperationNotSupportedException {
 		state.sendConnectionAck(this, message);
 	}
 
-	public Socket open(int port) throws OperationNotSupportedException {
-		return state.open(this, port);
+	public Socket accept() throws OperationNotSupportedException {
+		return state.accept(this);
 	}
 
 	public CtcomMessage readData() throws OperationNotSupportedException {
