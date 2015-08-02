@@ -1,17 +1,17 @@
 package ctcom.statesImpl.server;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import javax.naming.OperationNotSupportedException;
 
 import ctcom.CtcomServer;
+import ctcom.exceptions.ReadMessageException;
 import ctcom.messageImpl.CtcomMessage;
 import ctcom.messageImpl.QuitMessage;
+import ctcom.messageImpl.ReadDataMessage;
 import ctcom.states.ServerState;
 
 public class EstablishedServerState implements ServerState {
@@ -33,24 +33,21 @@ public class EstablishedServerState implements ServerState {
 
 	@Override
 	public CtcomMessage readData(CtcomServer server) throws OperationNotSupportedException {
-		System.out.println(server.getState()); // debug
-		CtcomMessage message = null;
 		Socket client = server.getClientSocket();
-		
-		try {	
-			BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-		
-			String line = reader.readLine();
-			while ( line != null ) {
-				System.out.println(line);
-				line = reader.readLine();
-			}
-			System.out.println(server.getState()); // debug
-			
+		CtcomMessage message = new ReadDataMessage();
+		// read data message from client
+		try {
+			message.readMessage(client);
 		} catch (IOException e) {
-			// cannot open stream, or read data
 			e.printStackTrace();
+			// stay in established server state
+			return null;
+		} catch (ReadMessageException e) {
+			e.printStackTrace();
+			// stay in established server state
+			return null;
 		}
+		
 		// stay in established server state
 		
 		// return read data

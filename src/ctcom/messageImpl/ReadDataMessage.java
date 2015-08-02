@@ -12,8 +12,11 @@ public class ReadDataMessage extends CtcomMessage {
 		TYPE, TRANSFER, LOCATION
 	}
 	
-	public ReadDataMessage(String location) {
+	public ReadDataMessage() {
 		this.type = MessageType.READ_DATA;
+	}
+	
+	public void setLocation(String location) {
 		this.location = location;
 	}
 	
