@@ -1,9 +1,5 @@
 package ctcom.messageImpl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,42 +47,9 @@ public class ConnectMessage extends CtcomMessage {
 	public String getProtocolVersion() {
 		return PROTOCOL_VERSION;
 	}
-
-	@Override
-	public void readMessage(Socket client) throws IOException, ReadMessageException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-		
-		boolean messageEnd = false;
-		String line = reader.readLine();
-		while ( line != null && ! messageEnd ) {
-			
-			// process line
-			if ( line.contains("=") ) {
-				processLine(line);
-				line = reader.readLine();
-				continue;
-			}
-			// skip beginning
-			else if ( line.startsWith("<") ) {
-				line = reader.readLine();
-				continue;
-			}
-			// skip empty lines, or lines containing whitespace only
-			else if ( line.isEmpty() || line.trim().isEmpty() ) {
-				line = reader.readLine();
-				continue;
-			}
-			// end of message
-			else if ( line.startsWith(">") ) {
-				messageEnd = true;
-				continue;
-			}
-
-			throw new ReadMessageException("Malformed line in message: '" + line + "'");
-		}
-	}
 	
-	private void processLine(String line) throws ReadMessageException {
+	@Override
+	protected void processLine(String line) throws ReadMessageException {
 		String[] keyValue = line.split("=");
 
 		// trim "-sign of values

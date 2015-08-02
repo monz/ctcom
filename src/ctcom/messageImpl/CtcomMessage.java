@@ -1,6 +1,8 @@
 package ctcom.messageImpl;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.Collection;
@@ -116,9 +118,47 @@ public abstract class CtcomMessage {
 	protected abstract void preparePayload();
 	
 	/**
-	 * Read data from client input stream, fill message attributes
+	 * Read data from client input stream
 	 * @throws IOException 
 	 * @throws ReadMessageException 
 	 */
-	public abstract void readMessage(Socket client) throws IOException, ReadMessageException;
+	public void readMessage(Socket client) throws IOException, ReadMessageException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+		
+		boolean messageEnd = false;
+		String line = reader.readLine();
+		while ( line != null && ! messageEnd ) {
+			
+			// process line
+			if ( line.contains("=") ) {
+				processLine(line);
+				line = reader.readLine();
+				continue;
+			}
+			// skip beginning
+			else if ( line.startsWith("<") ) {
+				line = reader.readLine();
+				continue;
+			}
+			// skip empty lines, or lines containing whitespace only
+			else if ( line.isEmpty() || line.trim().isEmpty() ) {
+				line = reader.readLine();
+				continue;
+			}
+			// end of message
+			else if ( line.startsWith(">") ) {
+				messageEnd = true;
+				continue;
+			}
+
+			throw new ReadMessageException("Malformed line in message: '" + line + "'");
+		}
+	}
+	
+	/**
+	 * Fills message attributes with data provided by the line parameter
+	 * @param line extracted line of readMessage method
+	 * @throws ReadMessageException
+	 */
+	protected abstract void processLine(String line) throws ReadMessageException;
 }
