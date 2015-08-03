@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.naming.OperationNotSupportedException;
 
+import ctcom.messageImpl.ConnectMessage;
 import ctcom.messageImpl.CtcomMessage;
 import ctcom.messageImpl.QuitMessage;
 import ctcom.messageImpl.ReadDataMessage;
@@ -25,9 +26,14 @@ public class MainServer {
 				s.accept();
 				// receive connect message
 				m = s.getMessage();
+				System.out.println(s.getState());
 				if ( m != null &&  m.getType() == MessageType.CONNECT ) {
 					// send ctcom acknowledge
 					s.sendConnectAcknowledge(m);
+					if ( ! ((ConnectMessage)m).isProtocolMatched() ) {
+						s.quit("Wrong protocol version");
+						continue;
+					}
 				} else {
 					continue;
 				}

@@ -12,6 +12,10 @@ public class ReadDataMessage extends CtcomMessage {
 		TYPE, TRANSFER, LOCATION
 	}
 	
+	public ReadDataMessage() {
+		this.type = MessageType.READ_DATA;
+	}
+	
 	public ReadDataMessage(String messageString) throws ReadMessageException {
 		super(messageString);
 		this.type = MessageType.READ_DATA;

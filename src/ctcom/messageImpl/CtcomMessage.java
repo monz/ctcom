@@ -14,6 +14,10 @@ public abstract class CtcomMessage {
 	protected MessageType type;
 	Map<MessageIdentifier, List<String>> payload = new HashMap<MessageIdentifier, List<String>>();
 	
+	public CtcomMessage() {
+		// explicit defining empty constructor
+	}
+	
 	public CtcomMessage(String messageString) throws ReadMessageException {
 		for ( String line : messageString.split(System.lineSeparator()) ) {
 			// process line

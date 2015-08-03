@@ -70,16 +70,15 @@ public class EstablishedServerState implements ServerState {
 	public void quit(CtcomServer server, String message) throws OperationNotSupportedException {
 		Socket client = server.getClientSocket();
 		try {
-			QuitMessage quitMessage = new QuitMessage(message);
-			
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+
+			QuitMessage quitMessage = new QuitMessage();
+			quitMessage.setMessage(message);
+			
 			writer.write(quitMessage.getPayload());
 			writer.flush();
 		} catch (IOException e) {
 			// cannot open stream, or read data
-			e.printStackTrace();
-		} catch (ReadMessageException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

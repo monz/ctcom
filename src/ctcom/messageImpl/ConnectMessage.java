@@ -9,6 +9,7 @@ import ctcom.messageTypes.MessageType;
 
 public class ConnectMessage extends CtcomMessage {
 	private static String PROTOCOL_VERSION = "2014.01";
+	boolean protocolMatched;
 	private List<String> testbenchWrite;
 	private List<String> testbenchRead;
 	
@@ -16,9 +17,17 @@ public class ConnectMessage extends CtcomMessage {
 		TYPE, PROTOCOL, TESTBENCH_WRITE, TESTBENCH_READ 
 	}
 	
+	public ConnectMessage() {
+		this.type = MessageType.CONNECT;
+	}
+	
 	public ConnectMessage(String messageString) throws ReadMessageException {
 		super(messageString);
 		this.type = MessageType.CONNECT;
+	}
+	
+	public boolean isProtocolMatched() {
+		return protocolMatched;
 	}
 	
 	public void addToTestbenchWrite(String value) {
@@ -72,10 +81,12 @@ public class ConnectMessage extends CtcomMessage {
 		}
 		// check if protocol version matches
 		else if ( keyValue[0].equals(formatIdentifier(Identifier.PROTOCOL)) ) {
-			if ( keyValue[1].equals(PROTOCOL_VERSION) ) { 
-				return; // has correct protocol version
+			if ( keyValue[1].equals(PROTOCOL_VERSION) ) {
+				protocolMatched = true;
+				return;
 			} else {
-				throw new ReadMessageException("Protocol version " + PROTOCOL_VERSION + " expected, but was '" + keyValue[1] + "'");
+				protocolMatched = false;
+				return;
 			}
 		}
 		// read test bench write data

@@ -11,9 +11,17 @@ public class QuitMessage extends CtcomMessage {
 		TYPE, MESSAGE
 	}
 	
+	public QuitMessage() {
+		this.type = MessageType.QUIT;
+	}
+	
 	public QuitMessage(String messageString) throws ReadMessageException {
 		super(messageString);
 		this.type = MessageType.QUIT;
+	}
+	
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 	public String getMessage() {
