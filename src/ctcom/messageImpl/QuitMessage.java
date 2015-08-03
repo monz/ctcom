@@ -11,9 +11,9 @@ public class QuitMessage extends CtcomMessage {
 		TYPE, MESSAGE
 	}
 	
-	public QuitMessage(String message) {
+	public QuitMessage(String messageString) throws ReadMessageException {
+		super(messageString);
 		this.type = MessageType.QUIT;
-		this.message = message;
 	}
 	
 	public String getMessage() {
@@ -38,7 +38,7 @@ public class QuitMessage extends CtcomMessage {
 			if ( keyValue[1].equals(MessageType.QUIT.toString()) ) { 
 				return; // has correct type
 			} else {
-				throw new ReadMessageException("Expected ctcom connect message, received type: '" + keyValue[1] + "'");
+				throw new ReadMessageException("Expected ctcom quit message, received type: '" + keyValue[1] + "'");
 			}
 		}
 		// extract message value

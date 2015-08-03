@@ -12,6 +12,7 @@ import ctcom.exceptions.ReadMessageException;
 import ctcom.messageImpl.CtcomMessage;
 import ctcom.messageImpl.QuitMessage;
 import ctcom.messageImpl.ReadDataMessage;
+import ctcom.messageTypes.MessageType;
 import ctcom.states.ServerState;
 
 public class EstablishedServerState implements ServerState {
@@ -32,12 +33,25 @@ public class EstablishedServerState implements ServerState {
 	}
 
 	@Override
-	public CtcomMessage readData(CtcomServer server) throws OperationNotSupportedException {
+	public CtcomMessage getMessage(CtcomServer server) throws OperationNotSupportedException {
 		Socket client = server.getClientSocket();
-		CtcomMessage message = new ReadDataMessage();
+		CtcomMessage message = null;
 		// read data message from client
+		String messageString;
+		MessageType messageType;
 		try {
-			message.readMessage(client);
+			messageString = server.getMessageString(client);
+			messageType = server.getMessageType(messageString);
+			// process readData message
+			if ( messageType == MessageType.READ_DATA ) {
+				message = new ReadDataMessage(messageString);
+				// stay in established server state
+			}
+			// process quit message
+			else if ( messageType == MessageType.QUIT ) {
+				message = new QuitMessage(messageString);
+				server.changeState(new QuitServerState());
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			// stay in established server state
@@ -47,11 +61,9 @@ public class EstablishedServerState implements ServerState {
 			// stay in established server state
 			return null;
 		}
-		
-		// stay in established server state
-		
-		// return read data
-		return message;
+				
+		// return read data or null if no correct message type was received 
+		return message;		
 	}
 
 	@Override
@@ -66,14 +78,11 @@ public class EstablishedServerState implements ServerState {
 		} catch (IOException e) {
 			// cannot open stream, or read data
 			e.printStackTrace();
+		} catch (ReadMessageException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		server.changeState(new ListenServerState());
 	}
-
-	@Override
-	public CtcomMessage getConnectRequest(CtcomServer server) throws OperationNotSupportedException {
-		throw new OperationNotSupportedException("Cannot serve client, connection already established.");
-	}
-
 }

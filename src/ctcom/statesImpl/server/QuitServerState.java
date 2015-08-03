@@ -41,12 +41,7 @@ public class QuitServerState implements ServerState {
 	}
 
 	@Override
-	public CtcomMessage getConnectRequest(CtcomServer server) throws OperationNotSupportedException {
-		throw new OperationNotSupportedException("Failed to serve client, ctcom connection is closed.");
-	}
-
-	@Override
-	public CtcomMessage readData(CtcomServer server) throws OperationNotSupportedException {
+	public CtcomMessage getMessage(CtcomServer server) throws OperationNotSupportedException {
 		throw new OperationNotSupportedException("Cannot read data, ctcom connection is closed.");
 	}
 

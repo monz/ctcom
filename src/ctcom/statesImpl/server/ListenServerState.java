@@ -34,22 +34,14 @@ public class ListenServerState implements ServerState {
 	}
 
 	@Override
-	public CtcomMessage readData(CtcomServer server) throws OperationNotSupportedException {
-		throw new OperationNotSupportedException("Cannot read data, connection is not established.");
-	}
-
-	@Override
-	public void quit(CtcomServer server, String message) throws OperationNotSupportedException {
-		throw new OperationNotSupportedException("Faild to quit connection, connection is not established.");
-	}
-
-	@Override
-	public CtcomMessage getConnectRequest(CtcomServer server) throws OperationNotSupportedException {
+	public CtcomMessage getMessage(CtcomServer server) throws OperationNotSupportedException {
 		Socket client = server.getClientSocket();
-		ConnectMessage message = new ConnectMessage();
+		String messageString;
+		ConnectMessage message;
 		// read connect message from client
 		try {
-			message.readMessage(client);
+			messageString = server.getMessageString(client);
+			message = new ConnectMessage(messageString);
 		} catch (IOException e) {
 			e.printStackTrace();
 			// stay in listen state
@@ -66,4 +58,8 @@ public class ListenServerState implements ServerState {
 		return message;
 	}
 
+	@Override
+	public void quit(CtcomServer server, String message) throws OperationNotSupportedException {
+		throw new OperationNotSupportedException("Faild to quit connection, connection is not established.");
+	}
 }

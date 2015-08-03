@@ -12,7 +12,8 @@ public class ReadDataMessage extends CtcomMessage {
 		TYPE, TRANSFER, LOCATION
 	}
 	
-	public ReadDataMessage() {
+	public ReadDataMessage(String messageString) throws ReadMessageException {
+		super(messageString);
 		this.type = MessageType.READ_DATA;
 	}
 	
@@ -47,7 +48,7 @@ public class ReadDataMessage extends CtcomMessage {
 			if ( keyValue[1].equals(MessageType.READ_DATA.toString()) ) { 
 				return; // has correct type
 			} else {
-				throw new ReadMessageException("Expected ctcom connect message, received type: '" + keyValue[1] + "'");
+				throw new ReadMessageException("Expected ctcom readData message, received type: '" + keyValue[1] + "'");
 			}
 		}
 		// extract transfer value

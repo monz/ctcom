@@ -9,14 +9,15 @@ import ctcom.messageTypes.MessageType;
 
 public class ConnectMessage extends CtcomMessage {
 	private static String PROTOCOL_VERSION = "2014.01";
-	private List<String> testbenchWrite = new ArrayList<String>();
-	private List<String> testbenchRead = new ArrayList<String>();
+	private List<String> testbenchWrite;
+	private List<String> testbenchRead;
 	
 	public enum Identifier implements MessageIdentifier {
 		TYPE, PROTOCOL, TESTBENCH_WRITE, TESTBENCH_READ 
 	}
 	
-	public ConnectMessage() {
+	public ConnectMessage(String messageString) throws ReadMessageException {
+		super(messageString);
 		this.type = MessageType.CONNECT;
 	}
 	
@@ -50,6 +51,12 @@ public class ConnectMessage extends CtcomMessage {
 	
 	@Override
 	protected void processLine(String line) throws ReadMessageException {
+		// initialize
+		if ( testbenchWrite == null || testbenchRead == null ) {
+			testbenchWrite = new ArrayList<String>();
+			testbenchRead = new ArrayList<String>();
+		}
+		
 		String[] keyValue = line.split("=");
 
 		// trim "-sign of values

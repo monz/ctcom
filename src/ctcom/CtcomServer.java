@@ -10,7 +10,7 @@ import ctcom.messageImpl.CtcomMessage;
 import ctcom.states.ServerState;
 import ctcom.statesImpl.server.ClosedServerState;
 
-public class CtcomServer {
+public class CtcomServer extends CtcomProtocol {
 	private ServerState state;
 	private ServerSocket serverSocket;
 	private Socket client;
@@ -41,10 +41,6 @@ public class CtcomServer {
 	public ServerState getState() {
 		return state;
 	}
-
-	public CtcomMessage getConnectRequest() throws OperationNotSupportedException {
-		return state.getConnectRequest(this);
-	}
 	
 	public void sendConnectAcknowledge(CtcomMessage message) throws OperationNotSupportedException {
 		state.sendConnectionAck(this, message);
@@ -54,12 +50,16 @@ public class CtcomServer {
 		return state.accept(this);
 	}
 
-	public CtcomMessage readData() throws OperationNotSupportedException {
-		return state.readData(this);
+	public CtcomMessage getMessage() throws OperationNotSupportedException {
+		return state.getMessage(this);
 	}
 
 	public void quit(String message) throws OperationNotSupportedException {
 		state.quit(this, message);
+	}
+	
+	public void close() throws OperationNotSupportedException {
+		state.close(this);
 	}
 	
 	public void changeState(ServerState state) {

@@ -1,9 +1,5 @@
 package ctcom.messageImpl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,6 +14,28 @@ public abstract class CtcomMessage {
 	protected MessageType type;
 	Map<MessageIdentifier, List<String>> payload = new HashMap<MessageIdentifier, List<String>>();
 	
+	public CtcomMessage(String messageString) throws ReadMessageException {
+		for ( String line : messageString.split(System.lineSeparator()) ) {
+			// process line
+			if ( line.contains("=") ) {
+				processLine(line);
+				continue;
+			}
+			// skip beginning
+			else if ( line.startsWith("<") ) {
+				continue;
+			}
+			// skip empty lines, or lines containing whitespace only
+			else if ( line.isEmpty() || line.trim().isEmpty() ) {
+				continue;
+			}
+			// end of message
+			else if ( line.startsWith(">") ) {
+				continue;
+			}
+			throw new ReadMessageException("Malformed line in message: '" + line + "'");
+		}
+	}
 	
 	public MessageType getType() {
 		return type;
@@ -116,44 +134,6 @@ public abstract class CtcomMessage {
 	 * Fills the payload with message specific data
 	 */
 	protected abstract void preparePayload();
-	
-	/**
-	 * Read data from client input stream
-	 * @throws IOException 
-	 * @throws ReadMessageException 
-	 */
-	public void readMessage(Socket client) throws IOException, ReadMessageException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-		
-		boolean messageEnd = false;
-		String line = reader.readLine();
-		while ( line != null && ! messageEnd ) {
-			
-			// process line
-			if ( line.contains("=") ) {
-				processLine(line);
-				line = reader.readLine();
-				continue;
-			}
-			// skip beginning
-			else if ( line.startsWith("<") ) {
-				line = reader.readLine();
-				continue;
-			}
-			// skip empty lines, or lines containing whitespace only
-			else if ( line.isEmpty() || line.trim().isEmpty() ) {
-				line = reader.readLine();
-				continue;
-			}
-			// end of message
-			else if ( line.startsWith(">") ) {
-				messageEnd = true;
-				continue;
-			}
-
-			throw new ReadMessageException("Malformed line in message: '" + line + "'");
-		}
-	}
 	
 	/**
 	 * Fills message attributes with data provided by the line parameter

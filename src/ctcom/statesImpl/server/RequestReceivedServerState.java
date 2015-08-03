@@ -39,12 +39,7 @@ public class RequestReceivedServerState implements ServerState {
 	}
 
 	@Override
-	public CtcomMessage getConnectRequest(CtcomServer server) throws OperationNotSupportedException {
-		throw new OperationNotSupportedException("Cannot receive connection request, already received. Only one concurrent connection allowed.");
-	}
-
-	@Override
-	public CtcomMessage readData(CtcomServer server) throws OperationNotSupportedException {
+	public CtcomMessage getMessage(CtcomServer server) throws OperationNotSupportedException {
 		throw new OperationNotSupportedException("Cannot read data, connection not established");
 	}
 
