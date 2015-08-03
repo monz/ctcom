@@ -15,7 +15,29 @@ public class ListenServerState implements ServerState {
 
 	@Override
 	public Socket accept(CtcomServer server) throws OperationNotSupportedException {
-		throw new OperationNotSupportedException("Could not open connection, already open.");
+		// if accept method is called in listen server state a client tried to
+		// send a malformed message or messages in the wrong order
+		// (readData before connect...) therefore it is better to close this
+		// client connection
+		
+		// close client connection
+		try {
+			server.getClientSocket().close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		// reset client connection attribute
+		Socket client = null;
+		server.setClientSocket(client);
+		// listen for new client
+		try {
+			client = server.getServerSocket().accept();
+			server.setClientSocket(client);
+		} catch (IOException e) {
+			e.printStackTrace();
+			server.changeState(new ClosedServerState());
+		}
+		return client;
 	}
 
 	@Override
