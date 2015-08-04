@@ -19,11 +19,15 @@ public class ConnectMessage extends CtcomMessage {
 	
 	public ConnectMessage() {
 		this.type = MessageType.CONNECT;
+		// initialize attributes for later usage
+		initialize();
 	}
 	
 	public ConnectMessage(String messageString) throws ReadMessageException {
 		super(messageString);
 		this.type = MessageType.CONNECT;
+		// no initialization is required, super constructor calls 
+		// processLine methods which is responsible for initialization 
 	}
 	
 	public boolean isProtocolMatched() {
@@ -60,11 +64,11 @@ public class ConnectMessage extends CtcomMessage {
 	
 	@Override
 	protected void processLine(String line) throws ReadMessageException {
-		// initialize
-		if ( testbenchWrite == null || testbenchRead == null ) {
-			testbenchWrite = new ArrayList<String>();
-			testbenchRead = new ArrayList<String>();
-		}
+		// initialize lists premature, because initialization within the
+		// constructor is too late. The lists get accessed by the super
+		// constructor before the actual constructor has finished
+		// initialization
+		initialize();
 		
 		String[] keyValue = line.split("=");
 
@@ -106,6 +110,13 @@ public class ConnectMessage extends CtcomMessage {
 		// false key, throw exception
 		else {
 			throw new ReadMessageException("Unknown key in connect message: '" + keyValue[0] + "'");
+		}
+	}
+	
+	private void initialize() {
+		if ( testbenchWrite == null || testbenchRead == null ) {
+			testbenchWrite = new ArrayList<String>();
+			testbenchRead = new ArrayList<String>();
 		}
 	}
 }
