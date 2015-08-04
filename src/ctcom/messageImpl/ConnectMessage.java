@@ -52,7 +52,7 @@ public class ConnectMessage extends CtcomMessage {
 	
 	@Override
 	protected void preparePayload() {
-		appendPayload(Identifier.TYPE, formatIdentifier(type));
+		appendPayload(Identifier.TYPE, type.toString());
 		appendPayload(Identifier.PROTOCOL, PROTOCOL_VERSION);
 		appendPayload(Identifier.TESTBENCH_WRITE, testbenchWrite);
 		appendPayload(Identifier.TESTBENCH_READ, testbenchRead);
