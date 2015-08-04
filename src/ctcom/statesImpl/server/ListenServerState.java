@@ -82,6 +82,11 @@ public class ListenServerState implements ServerState {
 
 	@Override
 	public void quit(CtcomServer server, String message) throws OperationNotSupportedException {
-		throw new OperationNotSupportedException("Faild to quit connection, connection is not established.");
+		throw new OperationNotSupportedException("Faild to quit connection, ctcom connection is not established.");
+	}
+
+	@Override
+	public void sendMessage(CtcomServer server, CtcomMessage message) throws OperationNotSupportedException {
+		throw new OperationNotSupportedException("Cannot send ctcom data message, ctcom connection is not established");
 	}
 }

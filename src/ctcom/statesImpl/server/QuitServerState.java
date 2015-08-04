@@ -50,4 +50,9 @@ public class QuitServerState implements ServerState {
 		throw new OperationNotSupportedException("Faild to quit ctcom connection, connection is closed.");
 	}
 
+	@Override
+	public void sendMessage(CtcomServer server, CtcomMessage message) throws OperationNotSupportedException {
+		throw new OperationNotSupportedException("Cannot send ctcom data message, ctcom connection is about to be closed");
+	}
+
 }

@@ -45,4 +45,9 @@ public class ClosedServerState implements ServerState {
 	public void sendConnectionAck(CtcomServer server, CtcomMessage message) throws OperationNotSupportedException {
 		throw new OperationNotSupportedException("Faild to send ctcom connection acknowledge, TCP connection is closed.");
 	}
+
+	@Override
+	public void sendMessage(CtcomServer server, CtcomMessage message) throws OperationNotSupportedException {
+		throw new OperationNotSupportedException("Failed to send ctcom data message, TCP connection is closed");
+	}
 }

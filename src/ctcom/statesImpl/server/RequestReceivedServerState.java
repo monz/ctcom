@@ -41,7 +41,7 @@ public class RequestReceivedServerState implements ServerState {
 
 	@Override
 	public CtcomMessage getMessage(CtcomServer server) throws OperationNotSupportedException {
-		throw new OperationNotSupportedException("Cannot read data, connection not established");
+		throw new OperationNotSupportedException("Cannot read data, ctcom connection not established");
 	}
 
 	@Override
@@ -61,6 +61,11 @@ public class RequestReceivedServerState implements ServerState {
 		}
 		
 		server.changeState(new ListenServerState());
+	}
+
+	@Override
+	public void sendMessage(CtcomServer server, CtcomMessage message) throws OperationNotSupportedException {
+		throw new OperationNotSupportedException("Cannot send ctcom data message, ctcom connection is not established");
 	}
 
 }

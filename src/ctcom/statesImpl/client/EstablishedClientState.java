@@ -76,4 +76,19 @@ public class EstablishedClientState implements ClientState {
 		
 	}
 
+	@Override
+	public void sendMessage(CtcomClient client, CtcomMessage message) throws OperationNotSupportedException {
+		try {
+			Socket server = client.getServerSocket();
+			
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
+			writer.write(message.getPayload());
+			writer.flush();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		// stay in established client state
+	}
+
 }

@@ -12,5 +12,6 @@ public interface ServerState {
 	public void close(CtcomServer server) throws OperationNotSupportedException;
 	public void sendConnectionAck(CtcomServer server, CtcomMessage message) throws OperationNotSupportedException;
 	public CtcomMessage getMessage(CtcomServer server) throws OperationNotSupportedException;
+	public void sendMessage(CtcomServer server, CtcomMessage message) throws OperationNotSupportedException;
 	public void quit(CtcomServer server, String message) throws OperationNotSupportedException;
 }

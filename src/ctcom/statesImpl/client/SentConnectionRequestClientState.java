@@ -48,4 +48,9 @@ public class SentConnectionRequestClientState implements ClientState {
 		throw new OperationNotSupportedException("Cannot quit ctcom connection, not established.");
 	}
 
+	@Override
+	public void sendMessage(CtcomClient client, CtcomMessage message) throws OperationNotSupportedException {
+		throw new OperationNotSupportedException("Cannot send ctcom data message, ctcom connection is not fully established yet. Waiting for connection acknowledge");
+	}
+
 }

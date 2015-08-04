@@ -30,10 +30,6 @@ public class CtcomServer extends CtcomProtocol {
 		return client;
 	}
 	
-	public void setServerSocket(ServerSocket serverSocket) {
-		this.serverSocket = serverSocket;
-	}
-	
 	public ServerSocket getServerSocket() {
 		return serverSocket;
 	}
@@ -52,6 +48,10 @@ public class CtcomServer extends CtcomProtocol {
 
 	public CtcomMessage getMessage() throws OperationNotSupportedException {
 		return state.getMessage(this);
+	}
+	
+	public void sendMessage(CtcomMessage message) throws OperationNotSupportedException {
+		state.sendMessage(this, message);
 	}
 
 	public void quit(String message) throws OperationNotSupportedException {

@@ -84,4 +84,19 @@ public class EstablishedServerState implements ServerState {
 		
 		server.changeState(new ListenServerState());
 	}
+
+	@Override
+	public void sendMessage(CtcomServer server, CtcomMessage message) throws OperationNotSupportedException {
+		try {
+			Socket client = server.getClientSocket();
+			
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+			writer.write(message.getPayload());
+			writer.flush();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		// stay in established server state
+	}
 }

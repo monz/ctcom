@@ -15,8 +15,10 @@ public class CtcomClient extends CtcomProtocol {
 	
 	public CtcomClient(String host, int port) {
 		try {
-			state = new ClosedClientState();
+			// open server connection
 			server = new Socket(host, port);
+			// starting in closed client state
+			state = new ClosedClientState();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -32,6 +34,10 @@ public class CtcomClient extends CtcomProtocol {
 	
 	public CtcomMessage getMessage() throws OperationNotSupportedException {
 		return state.getMessage(this);
+	}
+	
+	public void sendMessage(CtcomMessage message) throws OperationNotSupportedException {
+		state.sendMessage(this, message);
 	}
 	
 	public void quit(String message) throws OperationNotSupportedException {

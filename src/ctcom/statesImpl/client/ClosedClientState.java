@@ -38,4 +38,9 @@ public class ClosedClientState implements ClientState {
 		throw new OperationNotSupportedException("Cannot close ctcom connection, not established.");
 	}
 
+	@Override
+	public void sendMessage(CtcomClient client, CtcomMessage message) throws OperationNotSupportedException {
+		throw new OperationNotSupportedException("Cannot send ctcom message, ctcom connection is not established");
+	}
+
 }
