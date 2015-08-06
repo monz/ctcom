@@ -1,6 +1,6 @@
 package ctcom.messageTypes;
 
-public enum MessageType implements MessageIdentifier {
+public enum MessageType {
 	CONNECT, READ_DATA, QUIT;
 	
 	@Override

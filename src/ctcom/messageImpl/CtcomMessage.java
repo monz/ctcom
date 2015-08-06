@@ -12,7 +12,7 @@ import ctcom.messageTypes.MessageType;
 
 public abstract class CtcomMessage {
 	protected MessageType type;
-	Map<MessageIdentifier, List<String>> payload = new HashMap<MessageIdentifier, List<String>>();
+	private Map<MessageIdentifier, List<String>> payload = new HashMap<MessageIdentifier, List<String>>();
 	
 	public CtcomMessage() {
 		// explicit defining empty constructor

@@ -9,7 +9,7 @@ import ctcom.messageTypes.MessageType;
 
 public class ConnectMessage extends CtcomMessage {
 	private static String PROTOCOL_VERSION = "2014.01";
-	boolean protocolMatched;
+	private boolean protocolMatched;
 	private List<String> testbenchWrite;
 	private List<String> testbenchRead;
 	

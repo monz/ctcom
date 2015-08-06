@@ -16,8 +16,8 @@ public class CtcomProtocol {
 	 * @throws IOException 
 	 * @throws ReadMessageException 
 	 */
-	public String getMessageString(Socket client) throws IOException, ReadMessageException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+	public String getMessageString(Socket connection) throws IOException, ReadMessageException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 		StringBuffer message = new StringBuffer();
 		
 		boolean messageEnd = false;
