@@ -9,7 +9,7 @@ import ctcom.exceptions.ReadMessageException;
 import ctcom.messageImpl.QuitMessage.Identifier;
 import ctcom.messageTypes.MessageType;
 
-public class CtcomProtocol {
+public abstract class CtcomProtocol {
 	
 	/**
 	 * Read data from client input stream
