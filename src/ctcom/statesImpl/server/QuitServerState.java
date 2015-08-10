@@ -28,6 +28,7 @@ public class QuitServerState implements ServerState {
 	@Override
 	public void close(CtcomServer server) throws OperationNotSupportedException {
 		try {
+			server.getClientSocket().close();
 			server.getServerSocket().close();
 		} catch (IOException e) {
 			e.printStackTrace();
