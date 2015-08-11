@@ -11,6 +11,8 @@ import ctcom.messageTypes.MessageType;
 
 public abstract class CtcomProtocol {
 	
+	private String lastReceivedMessageString;
+
 	/**
 	 * Read data from client input stream
 	 * @throws IOException 
@@ -46,9 +48,19 @@ public abstract class CtcomProtocol {
 						
 			throw new ReadMessageException("Malformed line in message: '" + line + "'");
 		}
-		return message.toString();
+		lastReceivedMessageString = message.toString();
+
+		return lastReceivedMessageString;
 	}
-	
+
+	/**
+	 * Returns the last successfully received message represented as string
+	 * @return
+	 */
+	public String getLastReceivedMessageString() {
+		return lastReceivedMessageString;
+	}
+
 	/**
 	 * Extract message type of a message string
 	 * @param messageString
