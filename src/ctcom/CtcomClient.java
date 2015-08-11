@@ -5,6 +5,7 @@ import java.net.Socket;
 
 import javax.naming.OperationNotSupportedException;
 
+import ctcom.messageImpl.ConnectMessage;
 import ctcom.messageImpl.CtcomMessage;
 import ctcom.states.ClientState;
 import ctcom.statesImpl.client.ClosedClientState;
@@ -13,6 +14,12 @@ public class CtcomClient extends CtcomProtocol {
 	private Socket server;
 	private ClientState state;
 	
+	/**
+	 * Create ctcom client. The TCP connection to the ctcom
+	 * server is established immediately.
+	 * @param host - ctcom server's IP address, name
+	 * @param port - ctcom server's listening port number
+	 */
 	public CtcomClient(String host, int port) {
 		try {
 			// open server connection
@@ -24,26 +31,55 @@ public class CtcomClient extends CtcomProtocol {
 		}
 	}
 	
+	/**
+	 * Send ctcom connection request to ctcom server
+	 * @param message - Prepared/Filled {@link ConnectMessage}
+	 * @throws OperationNotSupportedException
+	 */
 	public void sendConnectionRequest(CtcomMessage message) throws OperationNotSupportedException {
 		state.sendConnectionRequest(this, message);
 	}
 	
+	/**
+	 * Return ctcom server's TCP connection this client is connected to
+	 * @return - ctcom server's TCP socket
+	 */
 	public Socket getServerSocket() {
 		return server;
 	}
 	
+	/**
+	 * Read next ctcom message from ctcom server
+	 * @return - Received ctcom message
+	 * @throws OperationNotSupportedException
+	 */
 	public CtcomMessage getMessage() throws OperationNotSupportedException {
 		return state.getMessage(this);
 	}
 	
+	/**
+	 * Send a ctcom message to the ctcom server
+	 * @param message - ctcom message
+	 * @throws OperationNotSupportedException
+	 */
 	public void sendMessage(CtcomMessage message) throws OperationNotSupportedException {
 		state.sendMessage(this, message);
 	}
 	
+	/**
+	 * Quit ctcom connection
+	 * @param message - Explanation why the ctcom connection was closed
+	 * @throws OperationNotSupportedException
+	 */
 	public void quit(String message) throws OperationNotSupportedException {
 		state.quit(this, message);
 	}
 	
+	/**
+	 * The ctcom client can be in different states. Not all methods are available in every state.
+	 * Some methods change the ctcom client's state to alter its behavior. Change ctcom client's state.
+	 * @param state - new state the client should be in
+	 */
 	public void changeState(ClientState state) {
 		this.state = state;
 	}	

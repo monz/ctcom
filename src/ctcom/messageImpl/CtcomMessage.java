@@ -18,6 +18,12 @@ public abstract class CtcomMessage {
 		// explicit defining empty constructor
 	}
 	
+	/**
+	 * Create ctcom message object. The object's attributes get filled
+	 * with the information extracted from the message string.
+	 * @param messageString - complete ctcom message, received from ctcom connection
+	 * @throws ReadMessageException
+	 */
 	public CtcomMessage(String messageString) throws ReadMessageException {
 		for ( String line : messageString.split(System.lineSeparator()) ) {
 			// process line
@@ -41,6 +47,10 @@ public abstract class CtcomMessage {
 		}
 	}
 	
+	/**
+	 * Return ctcom message type
+	 * @return
+	 */
 	public MessageType getType() {
 		return type;
 	}
@@ -135,12 +145,14 @@ public abstract class CtcomMessage {
 	}
 	
 	/**
-	 * Fills the payload with message specific data
+	 * Fills the payload attribute with message specific data. The
+	 * payload represents a ctcom message sent over a ctcom connection.
 	 */
 	protected abstract void preparePayload();
 	
 	/**
-	 * Fills message attributes with data provided by the line parameter
+	 * Process single line of ctcom message to fill object attributes
+	 * with data extracted from the line.
 	 * @param line extracted line of readMessage method
 	 * @throws ReadMessageException
 	 */

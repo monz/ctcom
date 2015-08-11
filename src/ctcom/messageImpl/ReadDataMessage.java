@@ -16,19 +16,37 @@ public class ReadDataMessage extends CtcomMessage {
 		this.type = MessageType.READ_DATA;
 	}
 	
+	/**
+	 * Create ctcom read data message object. The object's attributes get filled
+	 * with the information extracted from the message string.
+	 * @param messageString - complete ctcom message, received from ctcom connection
+	 * @throws ReadMessageException
+	 */
 	public ReadDataMessage(String messageString) throws ReadMessageException {
 		super(messageString);
 		this.type = MessageType.READ_DATA;
 	}
 	
+	/**
+	 * Set location attribute
+	 * @param location - full ctmat file path, e.g. network share
+	 */
 	public void setLocation(String location) {
 		this.location = location;
 	}
 	
+	/**
+	 * Return location attribute
+	 * @return
+	 */
 	public String getLocation() {
 		return location;
 	}
 	
+	/**
+	 * Return transfer attribute
+	 * @return
+	 */
 	public String getTransfer() {
 		return TRANSFER;
 	}

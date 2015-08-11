@@ -15,15 +15,29 @@ public class QuitMessage extends CtcomMessage {
 		this.type = MessageType.QUIT;
 	}
 	
+	/**
+	 * Create ctcom quit message object. The object's attributes get filled
+	 * with the information extracted from the message string.
+	 * @param messageString - complete ctcom message, received from ctcom connection
+	 * @throws ReadMessageException
+	 */
 	public QuitMessage(String messageString) throws ReadMessageException {
 		super(messageString);
 		this.type = MessageType.QUIT;
 	}
 	
+	/**
+	 * Set message attribute 
+	 * @param message - reason why connection get closed
+	 */
 	public void setMessage(String message) {
 		this.message = message;
 	}
 	
+	/**
+	 * Return message attribute
+	 * @return
+	 */
 	public String getMessage() {
 		return message;
 	}

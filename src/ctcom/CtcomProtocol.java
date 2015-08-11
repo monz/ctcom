@@ -88,6 +88,13 @@ public abstract class CtcomProtocol {
 		return null;
 	}
 	
+	/**
+	 * Ctcom message types are transferred in a different format. Therefore a
+	 * reformatting is requered to be able to find the corresponding
+	 * ctcom message type enumeration.
+	 * @param identifier - message type extracted from a ctcom message
+	 * @return properly formatted message type
+	 */
 	private String format(String identifier) {
 		StringBuffer formattedIdentifier = new StringBuffer();
 		

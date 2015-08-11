@@ -23,6 +23,12 @@ public class ConnectMessage extends CtcomMessage {
 		initialize();
 	}
 	
+	/**
+	 * Create ctcom connect message object. The object's attributes get filled
+	 * with the information extracted from the message string.
+	 * @param messageString - complete ctcom message, received from ctcom connection
+	 * @throws ReadMessageException
+	 */
 	public ConnectMessage(String messageString) throws ReadMessageException {
 		super(messageString);
 		this.type = MessageType.CONNECT;
@@ -30,22 +36,44 @@ public class ConnectMessage extends CtcomMessage {
 		// processLine methods which is responsible for initialization 
 	}
 	
+	/**
+	 * Protocol matched is true if the protocol version in the message string,
+	 * which was used to fill the object attributes, is equal to the configured
+	 * protocol version.
+	 * @return true if version in received message matched configured version at object creation, false otherwise
+	 */
 	public boolean isProtocolMatched() {
 		return protocolMatched;
 	}
 	
+	/**
+	 * Add new value to test bench write attribute list
+	 * @param value - value to add
+	 */
 	public void addToTestbenchWrite(String value) {
 		testbenchWrite.add(value);
 	}
 	
+	/**
+	 * Add new value to test bench read attribute list
+	 * @param value - value to add
+	 */
 	public void addToTestbenchRead(String value) {
 		testbenchRead.add(value);
 	}
 	
+	/**
+	 * Return all test bench write values
+	 * @return list of test bench write entries
+	 */
 	public List<String> getTestbenchWrite() {
 		return testbenchWrite;
 	}
 	
+	/**
+	 * Return all test bench read values
+	 * @return list of test bench read entries
+	 */
 	public List<String> getTestbenchRead() {
 		return testbenchRead;
 	}
@@ -57,7 +85,11 @@ public class ConnectMessage extends CtcomMessage {
 		appendPayload(Identifier.TESTBENCH_WRITE, testbenchWrite);
 		appendPayload(Identifier.TESTBENCH_READ, testbenchRead);
 	}
-	
+
+	/**
+	 * Returns configured protocol version
+	 * @return
+	 */
 	public String getProtocolVersion() {
 		return PROTOCOL_VERSION;
 	}
@@ -113,6 +145,9 @@ public class ConnectMessage extends CtcomMessage {
 		}
 	}
 	
+	/**
+	 * Initializes object attributes. If already initialized, nothing happens
+	 */
 	private void initialize() {
 		if ( testbenchWrite == null || testbenchRead == null ) {
 			testbenchWrite = new ArrayList<String>();
