@@ -25,7 +25,14 @@ public abstract class CtcomMessage {
 	 * @throws ReadMessageException
 	 */
 	public CtcomMessage(String messageString) throws ReadMessageException {
-		for ( String line : messageString.split(System.lineSeparator()) ) {
+		String workingMessage = messageString.trim();
+		
+		// validate message string
+		if ( ! workingMessage.startsWith("<") || ! workingMessage.endsWith(">") ) {
+			throw new ReadMessageException("Malformed message string");
+		}
+		
+		for ( String line : workingMessage.split(System.lineSeparator()) ) {
 			// process line
 			if ( line.contains("=") ) {
 				processLine(line);
@@ -48,6 +55,28 @@ public abstract class CtcomMessage {
 	}
 	
 	/**
+	 * Normalize line expects a raw line received from ctcom connection.
+	 * To normalize the line it will be split into a key and value pair.
+	 * Also unnecessary whitespace at the beginning and at the end of
+	 * the line get removed. Furthermore the quotation marks get removed,
+	 * which are surrounding the values.
+	 * @param line
+	 * @return
+	 */
+	protected String[] normalizeLine(String line) {
+		String[] keyValue = line.split("=");
+
+		// trim whitespace of key
+		keyValue[0] = keyValue[0].trim();
+		// trim "-sign of values
+		keyValue[1] = keyValue[1].replaceAll("\"", "");
+		// trim whitespace of values
+		keyValue[1] = keyValue[1].trim();
+		
+		return keyValue;
+	}
+	
+	/**
 	 * Return ctcom message type
 	 * @return
 	 */
@@ -67,7 +96,7 @@ public abstract class CtcomMessage {
 		// begin message
 		payloadAsString.append("<");
 		payloadAsString.append(System.lineSeparator());
-				
+
 		for ( MessageIdentifier identifier : payload.keySet() ) {
 			// add identifier
 			payloadAsString.append(formatIdentifier(identifier));

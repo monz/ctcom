@@ -50,10 +50,7 @@ public class QuitMessage extends CtcomMessage {
 
 	@Override
 	protected void processLine(String line) throws ReadMessageException {
-		String[] keyValue = line.split("=");
-
-		// trim "-sign of values
-		keyValue[1] = keyValue[1].replaceAll("\"", "");
+		String[] keyValue = normalizeLine(line);
 
 		// check if message type is correct
 		if ( keyValue[0].equals(formatIdentifier(Identifier.TYPE)) ) {
