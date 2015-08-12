@@ -91,4 +91,9 @@ public class EstablishedClientState implements ClientState {
 		// stay in established client state
 	}
 
+	@Override
+	public void close(CtcomClient client) throws OperationNotSupportedException {
+		throw new OperationNotSupportedException("Cannot close TCP connection, quit ctcom connection first");
+	}
+
 }

@@ -53,4 +53,14 @@ public class SentConnectionRequestClientState implements ClientState {
 		throw new OperationNotSupportedException("Cannot send ctcom data message, ctcom connection is not fully established yet. Waiting for connection acknowledge");
 	}
 
+	@Override
+	public void close(CtcomClient client) throws OperationNotSupportedException {
+		Socket server = client.getServerSocket();
+		try {
+			server.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

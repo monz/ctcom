@@ -43,4 +43,14 @@ public class ClosedClientState implements ClientState {
 		throw new OperationNotSupportedException("Cannot send ctcom message, ctcom connection is not established");
 	}
 
+	@Override
+	public void close(CtcomClient client) throws OperationNotSupportedException {
+		Socket server = client.getServerSocket();
+		try {
+			server.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

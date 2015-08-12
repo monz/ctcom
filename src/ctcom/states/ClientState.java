@@ -3,6 +3,7 @@ package ctcom.states;
 import javax.naming.OperationNotSupportedException;
 
 import ctcom.CtcomClient;
+import ctcom.messageImpl.ConnectMessage;
 import ctcom.messageImpl.CtcomMessage;
 
 public interface ClientState {
@@ -38,4 +39,13 @@ public interface ClientState {
 	 * @throws OperationNotSupportedException
 	 */
 	public void quit(CtcomClient client, String message) throws OperationNotSupportedException;
+	
+	/**
+	 * Close client TCP connection, close connection to ctcom server.
+	 * After closing the TCP connection, the ctcom client is unusable.
+	 * Therefore a new ctcom client must be created.
+	 * @param client - ctcom client holding the server TCP connection
+	 * @throws OperationNotSupportedException
+	 */
+	public void close(CtcomClient client) throws OperationNotSupportedException;
 }

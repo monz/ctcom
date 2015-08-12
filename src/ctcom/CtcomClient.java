@@ -74,6 +74,14 @@ public class CtcomClient extends CtcomProtocol {
 	public void quit(String message) throws OperationNotSupportedException {
 		state.quit(this, message);
 	}
+
+	/**
+	 * Return current state the ctcom client is in.
+	 * @return
+	 */
+	public ClientState getState() {
+		return state;
+	}
 	
 	/**
 	 * The ctcom client can be in different states. Not all methods are available in every state.
@@ -83,4 +91,14 @@ public class CtcomClient extends CtcomProtocol {
 	public void changeState(ClientState state) {
 		this.state = state;
 	}	
+	
+	/**
+	 * Close client TCP connection, close connection to ctcom server.
+	 * After closing the TCP connection, the ctcom client is unusable.
+	 * Therefore a new ctcom client must be created for new connections.
+	 * @throws OperationNotSupportedException
+	 */
+	public void close() throws OperationNotSupportedException {
+		this.state.close(this);
+	}
 }
