@@ -61,6 +61,7 @@ public class SentConnectionRequestClientState implements ClientState {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		client.changeState(new ClosedClientState());
 	}
 
 }
