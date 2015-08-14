@@ -51,6 +51,7 @@ public class ClosedClientState implements ClientState {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		// stay in closed client state
 	}
 
 }
