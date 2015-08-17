@@ -1,8 +1,10 @@
 package ctcomTest.stub;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutionException;
@@ -18,13 +20,15 @@ import ctcom.messageImpl.CtcomMessage;
 import ctcom.messageImpl.QuitMessage;
 import ctcom.messageImpl.ReadDataMessage;
 import ctcom.messageTypes.MessageType;
+import ctcomTest.stub.ServerMockHelper.MessageOperation;
 
 public class CtcomServerMock implements Runnable {
 	
 	private int port = 4745;
 	private CtcomMessage receivedMessage;
 	private long timeoutSeconds = 1;
-	private Semaphore messageInitialized = new Semaphore(0);
+	private Semaphore messageSent = new Semaphore(0);
+	private Semaphore messageReceived = new Semaphore(0);
 	
 	@Override
 	public void run() {
@@ -34,6 +38,8 @@ public class CtcomServerMock implements Runnable {
 		BufferedReader reader;
 		String line;
 		MessageType type;
+		MessageOperation operation;
+		String payload;
 		boolean quit = false;
 		
 		try {
@@ -42,7 +48,6 @@ public class CtcomServerMock implements Runnable {
 				client = server.accept();
 				
 				reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-				
 				line = reader.readLine();
 				
 				while ( line != null ) {
@@ -54,10 +59,28 @@ public class CtcomServerMock implements Runnable {
 					
 					// get message type
 					type = getMessageType(line);
+
+					// get operation
+					operation = getOperation(line);
 					
-					receivedMessage = processCtcomMessage(reader, type);
+					// get payload
+					payload = getPayload(line);
 					
-					messageInitialized.release();
+					switch(operation) {
+						case SEND:
+							sendCtcomMessage(client, type, payload);
+							messageSent.release();
+							break;
+						case RECEIVE:
+							receivedMessage = receiveCtcomMessage(client, type);
+							messageReceived.release();
+							break;
+						case NONE:
+							// fall through
+							// break;
+						default:
+							break;
+					}
 					
 					line = reader.readLine();
 				}
@@ -77,11 +100,36 @@ public class CtcomServerMock implements Runnable {
 	
 	private MessageType getMessageType(String line) throws ReadMessageException {
 		String lineValues[] = line.split(";");
-		if ( lineValues.length < 4 ) {
+		if ( lineValues.length < 3 ) {
 			throw new ReadMessageException("Malformed message, expected '<;type;CONNECT|READ_DATA|QUIT;>' but received '" + line + "'");
 		}
 		if ( lineValues[1].equals("type") ) {
 			return MessageType.valueOf(lineValues[2]);
+		}
+		return null;
+	}
+	
+	private MessageOperation getOperation(String line) throws ReadMessageException {
+		String lineValues[] = line.split(";");
+		if ( lineValues.length < 5 ) {
+			throw new ReadMessageException("Malformed message, expected '<;...;operation;SEND|RECEIVE|NONE;>' but received '" + line + "'");
+		}
+		if ( lineValues[3].equals("operation") ) {
+			return MessageOperation.valueOf(lineValues[4]);
+		}
+		return null;
+	}
+	
+	private String getPayload(String line) throws ReadMessageException {
+		String lineValues[] = line.split(";");
+		String payload;
+		if ( lineValues.length < 7 ) {
+			throw new ReadMessageException("Malformed message, expected '<;...;payload;%s;>' but received '" + line + "'");
+		}
+		if ( lineValues[3].equals("operation") ) {
+			payload = lineValues[6];
+			// return recovered payload
+			return payload.replaceAll("0x0a", "\n");
 		}
 		return null;
 	}
@@ -97,7 +145,9 @@ public class CtcomServerMock implements Runnable {
 		return false;
 	}
 	
-	private CtcomMessage processCtcomMessage(BufferedReader reader, MessageType type) {
+	private CtcomMessage receiveCtcomMessage(Socket client, MessageType type) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+
 		String messageString = "";
 		
 		ExecutorService service = Executors.newSingleThreadExecutor();
@@ -144,9 +194,35 @@ public class CtcomServerMock implements Runnable {
 		}
 		return message;
 	}
+	
+	public void sendCtcomMessage(Socket client, MessageType type, String messageString) throws IOException {
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+
+		CtcomMessage message = null;
+		try {
+			switch(type) {
+				case CONNECT:
+					message = new ConnectMessage(messageString);
+					break;
+				case READ_DATA:
+					message = new ReadDataMessage(messageString);
+					break;
+				case QUIT:
+					message = new QuitMessage(messageString);
+					break;
+				default:
+			}
+		} catch(ReadMessageException e) {
+			e.printStackTrace();
+		}
+		
+		writer.write(message.getPayload());
+		writer.newLine();
+		writer.flush();
+	}
 
 	public CtcomMessage getReceivedMessage() throws InterruptedException {
-		messageInitialized.acquire();
+		messageReceived.acquire();
 		return receivedMessage;
 	}
 }

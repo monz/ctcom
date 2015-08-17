@@ -20,7 +20,7 @@ import ctcom.states.ClientState;
 import ctcom.statesImpl.client.ClosedClientState;
 import ctcom.statesImpl.client.SentConnectionRequestClientState;
 import ctcomTest.stub.CtcomServerMock;
-import ctcomTest.stub.MessageOperation;
+import ctcomTest.stub.ServerMockHelper;
 
 public class CtcomClientClosedTest {
 
@@ -47,8 +47,9 @@ public class CtcomClientClosedTest {
 	@AfterClass
 	public static void tearDown() throws IOException, InterruptedException {
 		System.out.println("Waiting for server mock to shutdown.");
-		MessageOperation.SendMessage(client.getServerSocket(), MessageOperation.QUIT);
+		ServerMockHelper.SendMessage(client.getServerSocket(), ServerMockHelper.QUIT, ServerMockHelper.NO_PAYLOAD);
 		serverThread.join(waitForServerShutdownMillis);
+		System.out.println("Server successfully shutdown");
 	}
 
 	@Test
@@ -84,7 +85,7 @@ public class CtcomClientClosedTest {
 					+ ">";
 			
 			// prepare mock server for receiving a ctcom connect message
-			MessageOperation.SendMessage(client.getServerSocket(), MessageOperation.CONNECT_MESSAGE);
+			ServerMockHelper.ReceiveMessage(client.getServerSocket(), ServerMockHelper.CONNECT_MESSAGE);
 			// send actual connect message
 			ConnectMessage message = new ConnectMessage(messageString);
 			client.sendConnectionRequest(message);
@@ -99,7 +100,7 @@ public class CtcomClientClosedTest {
 			assertEquals(message.getPayload(),lastReceivedMessage.getPayload());
 			
 		} catch (OperationNotSupportedException e) {
-			// thrown exception was expected
+			fail("Operation should be implemented");
 		} catch (ReadMessageException e) {
 			fail("Should never be reached due to correct message string");
 		} catch (InterruptedException e) {
