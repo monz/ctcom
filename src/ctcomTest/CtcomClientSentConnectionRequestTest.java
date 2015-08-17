@@ -98,7 +98,7 @@ public class CtcomClientSentConnectionRequestTest {
 	}
 	
 	@Test
-	public void sendConnectionRequstTest() {
+	public void sendConnectionRequestTest() {
 		try {
 			client.sendConnectionRequest(null);
 			fail("Should have thrown OperationNotSupportedException");

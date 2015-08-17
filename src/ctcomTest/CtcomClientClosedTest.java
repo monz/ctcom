@@ -73,7 +73,7 @@ public class CtcomClientClosedTest {
 	}
 	
 	@Test
-	public void sendConnectionRequstTest() throws IOException {
+	public void sendConnectionRequestTest() throws IOException {
 		try {
 			
 			String messageString = 
