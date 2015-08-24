@@ -4,18 +4,24 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.naming.OperationNotSupportedException;
 
 import ctcom.CtcomClient;
 import ctcom.messageImpl.CtcomMessage;
 import ctcom.states.ClientState;
+import ctcom.util.LogHelper;
 
 public class ClosedClientState implements ClientState {
+	private static final Logger log = LogHelper.getLogger();
 
 	@Override
 	public void sendConnectionRequest(CtcomClient client, CtcomMessage message) throws OperationNotSupportedException {
 		try {
+			log.info("Sending connection request");
+			
 			Socket server = client.getServerSocket();
 			
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
@@ -25,6 +31,8 @@ public class ClosedClientState implements ClientState {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		log.info("Change CTCOM client state to 'SentConnectionRequest'");
+		
 		client.changeState(new SentConnectionRequestClientState());
 	}
 
@@ -45,10 +53,13 @@ public class ClosedClientState implements ClientState {
 
 	@Override
 	public void close(CtcomClient client) throws OperationNotSupportedException {
+		log.info("Try to close TCP connection to CTCOM server");
+		
 		Socket server = client.getServerSocket();
 		try {
 			server.close();
 		} catch (IOException e) {
+			log.log(Level.WARNING, "Could not close TCP connection to CTCOM server", e);
 			e.printStackTrace();
 		}
 		// stay in closed client state
