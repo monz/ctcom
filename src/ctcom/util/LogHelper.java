@@ -54,13 +54,13 @@ public class LogHelper {
 		h.setLevel(level);
 	}
 	
-	public void setOutputFile(String path, boolean append) throws IOException, OperationNotSupportedException {
+	public void setOutputFile(String pathPattern, boolean append) throws IOException, OperationNotSupportedException {
 		if ( outputFile == null ) {
-			outputFile = path;
+			outputFile = pathPattern;
 		} else {
 			throw new OperationNotSupportedException("Output file for logger already set to '" + outputFile + "'");
 		}
-		fh = new FileHandler(path, append);
+		fh = new FileHandler(pathPattern, append);
 		fh.setFormatter(new SimpleFormatter());
 		fh.setLevel(defaultFileLoglevel);
 		log.addHandler(fh);
