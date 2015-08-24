@@ -20,15 +20,11 @@ public class CtcomClient extends CtcomProtocol {
 	 * @param host - ctcom server's IP address, name
 	 * @param port - ctcom server's listening port number
 	 */
-	public CtcomClient(String host, int port) {
-		try {
-			// open server connection
-			server = new Socket(host, port);
-			// starting in closed client state
-			state = new ClosedClientState();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public CtcomClient(String host, int port) throws IOException {
+		// open server connection
+		server = new Socket(host, port);
+		// starting in closed client state
+		state = new ClosedClientState();
 	}
 	
 	/**
