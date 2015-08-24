@@ -46,11 +46,16 @@ public class LogHelper {
 		return log;
 	}
 	
-	public void setFileLoglevel(Level level) {
-		fh.setLevel(level);
+	public void setFileLoglevel(Level level) throws OperationNotSupportedException {
+		if ( fh != null ) {
+			fh.setLevel(level);
+		} else {
+			throw new OperationNotSupportedException("Cannot set file logggin level, please set output file first.");
+		}
 	}
 	
 	public void setConsoleLoglevel(Level level) {
+		// never null, created in constructor
 		h.setLevel(level);
 	}
 	
