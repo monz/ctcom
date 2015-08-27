@@ -26,7 +26,7 @@ public class CtcomServerMock implements Runnable {
 	
 	private int port = 4745;
 	private CtcomMessage receivedMessage;
-	private long timeoutSeconds = 1;
+	private long timeoutSeconds = 10;
 	private Semaphore messageSent = new Semaphore(0);
 	private Semaphore messageReceived = new Semaphore(0);
 	
@@ -36,6 +36,7 @@ public class CtcomServerMock implements Runnable {
 		Socket client;
 		
 		BufferedReader reader;
+		BufferedWriter writer;
 		String line;
 		MessageType type;
 		MessageOperation operation;
@@ -48,9 +49,12 @@ public class CtcomServerMock implements Runnable {
 				client = server.accept();
 				
 				reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+				writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
 				line = reader.readLine();
 				
 				while ( line != null ) {
+					System.out.println("Line: " + line);
+
 					// check which message type of message to receive next
 					if ( isServerQuit(line) ) {
 						quit = true;
@@ -68,12 +72,19 @@ public class CtcomServerMock implements Runnable {
 					
 					switch(operation) {
 						case SEND:
-							sendCtcomMessage(client, type, payload);
+							sendCtcomMessage(writer, type, payload);
 							messageSent.release();
 							break;
 						case RECEIVE:
-							receivedMessage = receiveCtcomMessage(client, type);
+							receivedMessage = receiveCtcomMessage(reader, type);
 							messageReceived.release();
+							break;
+						case WAIT:
+							try {
+								Thread.sleep(Integer.parseInt(payload));
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
 							break;
 						case NONE:
 							// fall through
@@ -126,7 +137,7 @@ public class CtcomServerMock implements Runnable {
 		if ( lineValues.length < 7 ) {
 			throw new ReadMessageException("Malformed message, expected '<;...;payload;%s;>' but received '" + line + "'");
 		}
-		if ( lineValues[3].equals("operation") ) {
+		if ( lineValues[5].equals("payload") ) {
 			payload = lineValues[6];
 			// return recovered payload
 			return payload.replaceAll("0x0a", "\n");
@@ -145,9 +156,7 @@ public class CtcomServerMock implements Runnable {
 		return false;
 	}
 	
-	private CtcomMessage receiveCtcomMessage(Socket client, MessageType type) throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-
+	private CtcomMessage receiveCtcomMessage(BufferedReader reader, MessageType type) throws IOException {
 		String messageString = "";
 		
 		ExecutorService service = Executors.newSingleThreadExecutor();
@@ -195,9 +204,7 @@ public class CtcomServerMock implements Runnable {
 		return message;
 	}
 	
-	public void sendCtcomMessage(Socket client, MessageType type, String messageString) throws IOException {
-		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
-
+	public void sendCtcomMessage(BufferedWriter writer, MessageType type, String messageString) throws IOException {
 		CtcomMessage message = null;
 		try {
 			switch(type) {

@@ -53,7 +53,7 @@ public class CtcomClientEstablishedTest {
 	@AfterClass
 	public static void tearDown() throws IOException, InterruptedException {
 		System.out.println("Waiting for server mock to shutdown.");
-		ServerMockHelper.SendMessage(client.getServerSocket(), ServerMockHelper.QUIT, ServerMockHelper.NO_PAYLOAD);
+		ServerMockHelper.sendMessage(client.getServerSocket(), ServerMockHelper.QUIT, ServerMockHelper.NO_PAYLOAD);
 		serverThread.join(waitForServerShutdownMillis);
 		System.out.println("Server successfully shutdown");
 	}
@@ -70,7 +70,7 @@ public class CtcomClientEstablishedTest {
 					+ ">";
 			
 			// prepare mock server to send a ctcom read data message
-			ServerMockHelper.SendMessage(client.getServerSocket(), ServerMockHelper.READ_DATA_MESSAGE, readDataMessageString);
+			ServerMockHelper.sendMessage(client.getServerSocket(), ServerMockHelper.READ_DATA_MESSAGE, readDataMessageString);
 			// receive read data message
 			lastReceivedMessage = client.getMessage(timeout);
 			
@@ -102,7 +102,7 @@ public class CtcomClientEstablishedTest {
 					+ "> \n";
 			
 			// prepare mock server for receiving a ctcom quit message
-			ServerMockHelper.ReceiveMessage(client.getServerSocket(), ServerMockHelper.QUIT_MESSAGE);
+			ServerMockHelper.receiveMessage(client.getServerSocket(), ServerMockHelper.QUIT_MESSAGE);
 			// send quit message
 			QuitMessage message = new QuitMessage(quitMessageString);
 			client.quit(message.getMessage());
@@ -157,7 +157,7 @@ public class CtcomClientEstablishedTest {
 					+ ">";
 			
 			// prepare mock server for receiving a ctcom read data message
-			ServerMockHelper.ReceiveMessage(client.getServerSocket(), ServerMockHelper.READ_DATA_MESSAGE);
+			ServerMockHelper.receiveMessage(client.getServerSocket(), ServerMockHelper.READ_DATA_MESSAGE);
 			// send read data message
 			CtcomMessage message = new ReadDataMessage(readDataMessageString);
 			client.sendMessage(message);

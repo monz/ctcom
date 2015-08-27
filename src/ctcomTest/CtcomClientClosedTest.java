@@ -49,7 +49,7 @@ public class CtcomClientClosedTest {
 	@AfterClass
 	public static void tearDown() throws IOException, InterruptedException {
 		System.out.println("Waiting for server mock to shutdown.");
-		ServerMockHelper.SendMessage(client.getServerSocket(), ServerMockHelper.QUIT, ServerMockHelper.NO_PAYLOAD);
+		ServerMockHelper.sendMessage(client.getServerSocket(), ServerMockHelper.QUIT, ServerMockHelper.NO_PAYLOAD);
 		serverThread.join(waitForServerShutdownMillis);
 		System.out.println("Server successfully shutdown");
 	}
@@ -89,7 +89,7 @@ public class CtcomClientClosedTest {
 					+ ">";
 			
 			// prepare mock server for receiving a ctcom connect message
-			ServerMockHelper.ReceiveMessage(client.getServerSocket(), ServerMockHelper.CONNECT_MESSAGE);
+			ServerMockHelper.receiveMessage(client.getServerSocket(), ServerMockHelper.CONNECT_MESSAGE);
 			// send actual connect message
 			ConnectMessage message = new ConnectMessage(messageString);
 			client.sendConnectionRequest(message);
