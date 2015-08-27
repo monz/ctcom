@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +28,7 @@ public class EstablishedClientState implements ClientState {
 	}
 
 	@Override
-	public CtcomMessage getMessage(CtcomClient client) throws OperationNotSupportedException {
+	public CtcomMessage getMessage(CtcomClient client, int timeout) throws OperationNotSupportedException, TimeoutException {
 		log.info("Receive CTCOM message");
 		
 		Socket server = client.getServerSocket();
@@ -36,7 +37,7 @@ public class EstablishedClientState implements ClientState {
 		String messageString;
 		MessageType messageType;
 		try {
-			messageString = client.getMessageString(server);
+			messageString = client.getMessageString(server, timeout);
 			
 			log.info("Received message string: \n" + messageString);
 			

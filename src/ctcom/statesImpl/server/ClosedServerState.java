@@ -27,7 +27,7 @@ public class ClosedServerState implements ServerState {
 	}
 
 	@Override
-	public CtcomMessage getMessage(CtcomServer server) throws OperationNotSupportedException {
+	public CtcomMessage getMessage(CtcomServer server, int timeout) throws OperationNotSupportedException {
 		throw new OperationNotSupportedException("Cannot read data, TCP connection is closed.");
 	}
 

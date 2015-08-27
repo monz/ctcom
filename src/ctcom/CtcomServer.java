@@ -82,11 +82,12 @@ public class CtcomServer extends CtcomProtocol {
 
 	/**
 	 * Read next ctcom message sent from ctcom client
+	 * @param timeout - time to wait until reading message string fails
 	 * @return Received ctcom message
 	 * @throws OperationNotSupportedException
 	 */
-	public CtcomMessage getMessage() throws OperationNotSupportedException {
-		return state.getMessage(this);
+	public CtcomMessage getMessage(int timeout) throws OperationNotSupportedException {
+		return state.getMessage(this, timeout);
 	}
 	
 	/**

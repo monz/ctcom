@@ -38,10 +38,11 @@ public interface ServerState {
 	/**
 	 * Read next ctcom message sent from ctcom client
 	 * @param server - ctcom server holding the client TCP connection
+	 * @param timeout - time to wait until reading message string fails
 	 * @return - Received ctcom message
 	 * @throws OperationNotSupportedException
 	 */
-	public CtcomMessage getMessage(CtcomServer server) throws OperationNotSupportedException;
+	public CtcomMessage getMessage(CtcomServer server, int timeout) throws OperationNotSupportedException;
 	
 	/**
 	 * Send a ctcom message to the ctcom client

@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.concurrent.TimeoutException;
 
 import javax.naming.OperationNotSupportedException;
 
@@ -33,14 +34,14 @@ public class EstablishedServerState implements ServerState {
 	}
 
 	@Override
-	public CtcomMessage getMessage(CtcomServer server) throws OperationNotSupportedException {
+	public CtcomMessage getMessage(CtcomServer server, int timeout) throws OperationNotSupportedException {
 		Socket client = server.getClientSocket();
 		CtcomMessage message = null;
 		// read data message from client
 		String messageString;
 		MessageType messageType;
 		try {
-			messageString = server.getMessageString(client);
+			messageString = server.getMessageString(client, timeout);
 			messageType = server.getMessageType(messageString);
 			// process readData message
 			if ( messageType == MessageType.READ_DATA ) {
@@ -57,6 +58,10 @@ public class EstablishedServerState implements ServerState {
 			// stay in established server state
 			return null;
 		} catch (ReadMessageException e) {
+			e.printStackTrace();
+			// stay in established server state
+			return null;
+		} catch (TimeoutException e) {
 			e.printStackTrace();
 			// stay in established server state
 			return null;

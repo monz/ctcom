@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 import javax.naming.OperationNotSupportedException;
 
@@ -28,6 +29,7 @@ public class CtcomClientClosedTest {
 	private static final int port = 4745;
 	private static final long waitForServerShutdownMillis = 1000;
 	private static final long waitForServerInitMillis = 50;
+	private static final int timeout = 1;
 	
 	private static Thread serverThread;
 	private static CtcomServerMock server;
@@ -55,10 +57,12 @@ public class CtcomClientClosedTest {
 	@Test
 	public void getMessageTest() {
 		try {
-			client.getMessage();
+			client.getMessage(timeout);
 			fail("Should have thrown OperationNotSupportedException");
 		} catch (OperationNotSupportedException e) {
 			// thrown exception was expected
+		} catch (TimeoutException e) {
+			fail("Reading CTCOM message string timed out, should not happen");
 		}
 	}
 	

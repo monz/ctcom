@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,7 +38,7 @@ public class ClosedClientState implements ClientState {
 	}
 
 	@Override
-	public CtcomMessage getMessage(CtcomClient client) throws OperationNotSupportedException {
+	public CtcomMessage getMessage(CtcomClient client, int timeout) throws OperationNotSupportedException, TimeoutException {
 		throw new OperationNotSupportedException("Cannot receive ctcom message, connection is not established.");
 	}
 

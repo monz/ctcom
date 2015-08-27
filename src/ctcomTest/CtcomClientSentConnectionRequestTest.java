@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 import javax.naming.OperationNotSupportedException;
 
@@ -28,7 +29,8 @@ public class CtcomClientSentConnectionRequestTest {
 	private static final int port = 4745;
 	private static final long waitForServerShutdownMillis = 1000;
 	private static final long waitForServerInitMillis = 50;
-	
+	private static final int timeout = 1;
+
 	private static Thread serverThread;
 	private static CtcomServerMock server;
 	private static CtcomMessage lastReceivedMessage;
@@ -69,7 +71,7 @@ public class CtcomClientSentConnectionRequestTest {
 			// prepare mock server to send a ctcom connect acknowledge message
 			ServerMockHelper.SendMessage(client.getServerSocket(), ServerMockHelper.CONNECT_MESSAGE, acknowledgeMessageString);
 			// receive connect acknowledge message
-			lastReceivedMessage = client.getMessage();
+			lastReceivedMessage = client.getMessage(timeout);
 			
 			// check if client is now in the correct state
 			ClientState actualState = client.getState();
@@ -84,6 +86,8 @@ public class CtcomClientSentConnectionRequestTest {
 			fail("Operation should be implemented");
 		} catch (ReadMessageException e) {
 			fail("Should never be reached due to correct message string");
+		} catch (TimeoutException e) {
+			fail("Reading CTCOM message string timed out, should not happen");
 		}
 	}
 	

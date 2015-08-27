@@ -2,6 +2,7 @@ package ctcom.statesImpl.client;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +24,7 @@ public class SentConnectionRequestClientState implements ClientState {
 	}
 
 	@Override
-	public CtcomMessage getMessage(CtcomClient client) throws OperationNotSupportedException {
+	public CtcomMessage getMessage(CtcomClient client, int timeout) throws OperationNotSupportedException, TimeoutException {
 		log.info("Receive CTCOM message");
 
 		Socket server = client.getServerSocket();
@@ -31,7 +32,7 @@ public class SentConnectionRequestClientState implements ClientState {
 		ConnectMessage message;
 		// read connect message from client
 		try {
-			messageString = client.getMessageString(server);
+			messageString = client.getMessageString(server, timeout);
 			
 			log.info("Received message string: \n" + messageString);
 

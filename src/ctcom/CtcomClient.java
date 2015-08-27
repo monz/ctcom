@@ -2,6 +2,7 @@ package ctcom;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.TimeoutException;
 
 import javax.naming.OperationNotSupportedException;
 
@@ -46,11 +47,13 @@ public class CtcomClient extends CtcomProtocol {
 	
 	/**
 	 * Read next ctcom message from ctcom server
+	 * @param timeout - time to wait until reading message string fails
 	 * @return - Received ctcom message
 	 * @throws OperationNotSupportedException
+	 * @throws TimeoutException 
 	 */
-	public CtcomMessage getMessage() throws OperationNotSupportedException {
-		return state.getMessage(this);
+	public CtcomMessage getMessage(int timeout) throws OperationNotSupportedException, TimeoutException {
+		return state.getMessage(this, timeout);
 	}
 	
 	/**

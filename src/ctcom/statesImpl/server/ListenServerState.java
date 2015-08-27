@@ -2,6 +2,7 @@ package ctcom.statesImpl.server;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.TimeoutException;
 
 import javax.naming.OperationNotSupportedException;
 
@@ -57,19 +58,23 @@ public class ListenServerState implements ServerState {
 	}
 
 	@Override
-	public CtcomMessage getMessage(CtcomServer server) throws OperationNotSupportedException {
+	public CtcomMessage getMessage(CtcomServer server, int timeout) throws OperationNotSupportedException {
 		Socket client = server.getClientSocket();
 		String messageString;
 		ConnectMessage message;
 		// read connect message from client
 		try {
-			messageString = server.getMessageString(client);
+			messageString = server.getMessageString(client, timeout);
 			message = new ConnectMessage(messageString);
 		} catch (IOException e) {
 			e.printStackTrace();
 			// stay in listen state
 			return null;
 		} catch (ReadMessageException e) {
+			e.printStackTrace();
+			// stay in listen state
+			return null;
+		} catch (TimeoutException e) {
 			e.printStackTrace();
 			// stay in listen state
 			return null;

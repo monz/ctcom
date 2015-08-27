@@ -1,5 +1,7 @@
 package ctcom.states;
 
+import java.util.concurrent.TimeoutException;
+
 import javax.naming.OperationNotSupportedException;
 
 import ctcom.CtcomClient;
@@ -19,10 +21,11 @@ public interface ClientState {
 	/**
 	 * Read next ctcom message from ctcom server
 	 * @param client - ctcom client holding the server TCP connection
+	 * @param timeout - time to wait until reading message string fails
 	 * @return - Received ctcom message
 	 * @throws OperationNotSupportedException
 	 */
-	public CtcomMessage getMessage(CtcomClient client) throws OperationNotSupportedException;
+	public CtcomMessage getMessage(CtcomClient client, int timeout) throws OperationNotSupportedException, TimeoutException;
 	
 	/**
 	 * Send a ctcom message to the ctcom server
