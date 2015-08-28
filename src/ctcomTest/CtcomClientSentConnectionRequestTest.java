@@ -92,6 +92,23 @@ public class CtcomClientSentConnectionRequestTest {
 	}
 	
 	@Test
+	public void getMessageTimeoutTest() throws IOException {
+		int readMsgTimeout = 1; // seconds
+		
+		try {
+			// try to receive CTCOM readData message from CTCOM server
+			try {
+				client.getMessage(readMsgTimeout);
+				fail("Should not be reached, due to timeout exception");
+			} catch (TimeoutException e) {
+				// thrown exception was expected
+			}
+		} catch (OperationNotSupportedException e) {
+			fail("Operation should be implemented");
+		}
+	}
+	
+	@Test
 	public void quitTest() {
 		try {
 			client.quit("this is it, close this shit");

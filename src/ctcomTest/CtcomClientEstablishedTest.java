@@ -179,5 +179,22 @@ public class CtcomClientEstablishedTest {
 			fail("Should never be interrupted");
 		}
 	}
+	
+	@Test
+	public void getMessageTimeoutTest() throws IOException {
+		int readMsgTimeout = 1; // seconds
+		
+		try {
+			// try to receive CTCOM readData message from CTCOM server
+			try {
+				client.getMessage(readMsgTimeout);
+				fail("Should not be reached, due to timeout exception");
+			} catch (TimeoutException e) {
+				// thrown exception was expected
+			}
+		} catch (OperationNotSupportedException e) {
+			fail("Operation should be implemented");
+		}
+	}
 
 }

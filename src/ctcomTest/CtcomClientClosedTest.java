@@ -112,6 +112,58 @@ public class CtcomClientClosedTest {
 		}
 	}
 	
+	@Test
+	public void acknowledgeMessageTimeoutTest() throws IOException {
+		try {
+			int serverDelay = 2000; // milliseconds
+			int readMsgTimeout = 1; // seconds
+			
+			String messageString = 
+					"< \n"
+					+ "type=\"connect\" \n"
+					+ "protocol=\"2014.01\" \n"
+					+ "testbenchRead=\"header, partInfo\" \n"
+					+ "testbenchWrite=\"header,warnings\" \n"
+					+ ">";
+			
+			// delay mock server by 3 seconds, to simulate timeout
+			ServerMockHelper.wait(client.getServerSocket(), serverDelay);
+			
+			// send CTCOM connect message to change to the next CTCOM state
+			
+			// prepare mock server for receiving a ctcom connect message
+			ServerMockHelper.receiveMessage(client.getServerSocket(), ServerMockHelper.CONNECT_MESSAGE);
+			
+			// send actual connect message
+			ConnectMessage message = new ConnectMessage(messageString);
+			client.sendConnectionRequest(message);
+			
+			// check if client is now in the correct state
+			ClientState actualState = client.getState();
+			ClientState expectedState = new SentConnectionRequestClientState();
+			assertEquals(expectedState.getClass(), actualState.getClass());
+			
+			// try to receive acknowledge message from CTCOM server
+			try {
+				client.getMessage(readMsgTimeout);
+				fail("Should not be reached, due to timeout exception");
+			} catch (TimeoutException e) {
+				// thrown exception was expected
+			}
+			
+			// check if received message equals sent message
+			lastReceivedMessage = server.getReceivedMessage();
+			assertEquals(message.getPayload(),lastReceivedMessage.getPayload());
+			
+		} catch (OperationNotSupportedException e) {
+			fail("Operation should be implemented");
+		} catch (ReadMessageException e) {
+			fail("Should never be reached due to correct message string");
+		} catch (InterruptedException e) {
+			fail("Should never be interrupted");
+		}
+	}
+	
 	private static void initMockedServer() throws InterruptedException {
 		server = new CtcomServerMock();
 		serverThread = new Thread(server);
